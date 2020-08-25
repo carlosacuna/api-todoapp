@@ -1,36 +1,15 @@
-const express = require('express')
-const bodyParser = require('body-parser')
 
-const app = express()
-const port = process.env.PORT || 3000
+const mongoose = require('mongoose')
+const app = require('./app')
+const config = require('./config')
 
-app.use(bodyParser.urlencoded({extended:false}))
-app.use(bodyParser.json())
-
-app.get('/api/task', (req, res)=>{
-   res.status(200)
-        .send({message: "success", data:[]}) 
-})
-
-app.get('/api/task/:taskId', (req, res)=>{
-    
-})
-
-app.post('/api/task', (req, res)=>{
-    console.log(req.body)
-    res.status(201)
-    .send({message: "Guardado exitosamente!!"}) 
-})
-
-app.put('/api/task/:taskId', (req, res)=>{
-    
-})
-
-app.delete('/api/task/:taskId', (req, res)=>{
-    
-})
+mongoose.connect(config.db, {useNewUrlParser: true, useUnifiedTopology: true});
+const db = mongoose.connection;
 
 
-app.listen(3000,()=>{
-    console.log(`Api corriendo en http://localhost:${port}`)
+db.on('error', console.error.bind(console, 'connection error:'));
+db.once('open', function() {
+  app.listen(config.port,()=>{
+      console.log(`Api corriendo en http://localhost:${config.port}`)
+  })
 })
