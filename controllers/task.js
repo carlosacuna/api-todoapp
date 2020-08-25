@@ -1,7 +1,7 @@
 const Task = require('../models/task')
 
-function getTasks(req, res){
-    Task.find({}, (err, tasks)=>{
+function getTasks(req, res){    
+    Task.find({user_id: req.user._id}, (err, tasks)=>{
         if(err) return res.status(500).send({message: `Error al consultar el dato: ${err}`})
 
         if(!tasks){
@@ -18,6 +18,7 @@ function saveTask(req, res){
     let task = new Task()
     task.title = req.body.title,
     task.description = req.body.description,
+    task.user_id = req.user._id,
     task.state = req.body.state
 
     task.save((err, taskStored)=>{
